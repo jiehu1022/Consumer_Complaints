@@ -26,24 +26,24 @@ def super_split(line):
 
 """
   process the complaint and extract the data. 
-  the product should be low case
+  the product should be low case.
 """
 def process_complaint(line):
   s = super_split(line)
   if len(s) != 18:
     return (-1 , -1, -1, -1)
-  id = s[-1]
+  idd = s[-1]
   try:
     product = s[1].strip().lower()
     year = int(s[0].strip().split('-')[0])
     company = s[7].strip().lower()
-    return (id, product, year, company)
+    return (idd, product, year, company)
   except Exception as ex:
     return (-1, -1, -1, -1)
 
 """
-  1.read data form the input file
-  2.preprocess the data include dedup
+  1.read data from the input file
+  2.preprocess the data 
   3.return the product_data
 """
 def process_data(f):
