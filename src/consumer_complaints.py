@@ -112,7 +112,7 @@ def caculate_and_sort(product_data):
       total_complains = year_item[1][0]
       total_company = year_item[1][1]
       max_company = company_count(year_item[1][3])
-      percentage = max_company / total_complains * 100
+      percentage = max_company / total_complains
       data.append([product, year, total_complains, total_company, process_nums(percentage)])
   data = sorted(data, key=functools.cmp_to_key(complain_cmp))
   return data
