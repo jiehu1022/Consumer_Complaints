@@ -54,20 +54,21 @@ def process_data(f):
     complaints.readline()
     for line in complaints:
       line = line.strip()
-      (id, product, year, company) = process_complaint(line)
+      (idd, product, year, company) = process_complaint(line)
       # if we get duplicate complaint
       # we should pass
-      if id in ids:
+      if idd in ids:
         continue
-      ids.add(id)
+      ids.add(idd)
       if product not in product_data:
         product_data[product] = {}
       if year not in  product_data[product]:
-        product_data[product][year] = [0, 0, set()]
+        product_data[product][year] = [0, 0, set(),[]]
       # total number complains from the year and product
       product_data[product][year][0] =  product_data[product][year][0] + 1
       # total number of companies receiving at least one complaint for that product and year
       product_data[product][year][2].add(company)
+      product_data[product][year][3].append(company)
       product_data[product][year][1] = len(product_data[product][year][2])
   return product_data
 
@@ -88,6 +89,19 @@ def complain_cmp(a, b):
   else:
     return -1
 
+def process_nums(nums):
+    expand_nums = nums * 100
+    if expand_nums - int(expand_nums) >= 0.5:
+        expand_nums += 1
+    return int(expand_nums)
+
+
+def company_count(total_company):
+    company_nums = {}
+    n = 0
+    for company in total_company:
+        company_nums[company] = company_nums.get(company, 0) + 1
+    return sorted(company_nums.items(), key=lambda item: item[1])[-1][-1]
 
 def caculate_and_sort(product_data):
   data = []
@@ -97,8 +111,9 @@ def caculate_and_sort(product_data):
       year = year_item[0]
       total_complains = year_item[1][0]
       total_company = year_item[1][1]
-      percentage = round(total_company / total_complains * 100)
-      data.append([product, year, total_complains, total_company, percentage])
+      max_company = company_count(year_item[1][3])
+      percentage = max_company / total_complains * 100
+      data.append([product, year, total_complains, total_company, process_nums(percentage)])
   data = sorted(data, key=functools.cmp_to_key(complain_cmp))
   return data
 
